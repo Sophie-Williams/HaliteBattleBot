@@ -2,7 +2,7 @@
 #include "hlt/navigation.hpp"
 
 int main() {
-    const hlt::Metadata metadata = hlt::initialize("IvanTheTerrible");
+    const hlt::Metadata metadata = hlt::initialize("Dagoba");
     const hlt::PlayerId player_id = metadata.player_id;
 
     const hlt::Map& initial_map = metadata.initial_map;
@@ -23,13 +23,17 @@ int main() {
         const hlt::Map map = hlt::in::get_map();
 
         for (const hlt::Ship& ship : map.ships.at(player_id)) {
+
+            //Current ship is already docked......do nothing
             if (ship.docking_status != hlt::ShipDockingStatus::Undocked) {
                 continue;
             }
 
+            //Iterate over all planets in the environment and assess their current status
             for (const hlt::Planet& planet : map.planets) {
-                if (planet.owned) {
-                    continue;
+                if (planet.owned && planet.owner_id != player_id) {
+                    
+                    continue; 
                 }
 
                 if (ship.can_dock(planet)) {
